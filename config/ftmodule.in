@@ -11,10 +11,8 @@
  */
 
 #cmakedefine FT2_DRIVER_BDF
-#cmakedefine FT2_DRIVER_CID
-#cmakedefine FT2_DRIVER_OPENTYPE
+#cmakedefine FT2_DRIVER_CFF
 #cmakedefine FT2_DRIVER_PCF
-#cmakedefine FT2_DRIVER_SFNT
 #cmakedefine FT2_DRIVER_TRUEDOC
 #cmakedefine FT2_DRIVER_TRUETYPE
 #cmakedefine FT2_DRIVER_TYPE1
@@ -28,10 +26,10 @@ FT_USE_MODULE( FT_Driver_ClassRec, tt_driver_class )
 #ifdef FT2_DRIVER_TYPE1
 FT_USE_MODULE( FT_Driver_ClassRec, t1_driver_class )
 #endif
-#ifdef FT2_DRIVER_OPENTYPE
+#ifdef FT2_DRIVER_CFF
 FT_USE_MODULE( FT_Driver_ClassRec, cff_driver_class )
 #endif
-#ifdef FT2_DRIVER_CID
+#ifdef FT2_DRIVER_TYPE1
 FT_USE_MODULE( FT_Driver_ClassRec, t1cid_driver_class )
 #endif
 #ifdef FT2_DRIVER_TRUEDOC
@@ -46,17 +44,15 @@ FT_USE_MODULE( FT_Driver_ClassRec, winfnt_driver_class )
 #ifdef FT2_DRIVER_PCF
 FT_USE_MODULE( FT_Driver_ClassRec, pcf_driver_class )
 #endif
-#if defined(FT2_DRIVER_CID) || defined(FT2_DRIVER_TYPE1)
+#ifdef FT2_DRIVER_TYPE1
 FT_USE_MODULE( FT_Module_Class, psaux_module_class )
 #endif
-#if defined(FT2_DRIVER_OPENTYPE) || defined(FT2_DRIVER_TRUETYPE) || defined(FT2_DRIVER_TYPE1)
+#if defined(FT2_DRIVER_CFF) || defined(FT2_DRIVER_TYPE1)
 FT_USE_MODULE( FT_Module_Class, psnames_module_class )
-#endif
-#if defined(FT2_DRIVER_OPENTYPE) || defined(FT2_DRIVER_TYPE1)
 FT_USE_MODULE( FT_Module_Class, pshinter_module_class )
 #endif
 FT_USE_MODULE( FT_Renderer_Class, ft_raster1_renderer_class )
-#ifdef FT2_DRIVER_SFNT
+#if defined(FT2_DRIVER_CFF) || defined(FT2_DRIVER_TRUETYPE)
 FT_USE_MODULE( FT_Module_Class, sfnt_module_class )
 #endif
 #ifdef FT2_SUPPORT_SMOOTH

@@ -60,7 +60,7 @@ option(FT2_BUILD_STATIC "Build Static Library" ON)
 cmake_dependent_option(FT2_BUILD_TESTS "Build Tests" ON "NOT CMAKE_TOOLCHAIN_FILE" OFF)
 
 option(FT2_DRIVER_BDF "Support Adobe Glyph Bitmap Fonts" OFF)
-option(FT2_DRIVER_OPENTYPE "Support OpenType/CFF Fonts (.OTF)" OFF)
+option(FT2_DRIVER_CCF "Support OpenType/CFF Fonts (.OTF)" OFF)
 option(FT2_DRIVER_MACFNT "Support Macintosh Outline Formats" OFF)
 option(FT2_DRIVER_PCF "Support CyberTex PCF Bitmap Fonts" OFF)
 option(FT2_DRIVER_TRUEDOC "Support BitStream TrueDoc Fonts (.PFR)" OFF)
@@ -71,6 +71,7 @@ option(FT2_DRIVER_WINFNT "Support Windows Bitmap Fonts (.FON, .FNT)" OFF)
 option(FT2_SUPPORT_CACHE "Support FreeType Cache (Experimental)" ON)
 option(FT2_SUPPORT_ENVPROP "Support Envinronment Properties" OFF)
 option(FT2_SUPPORT_INCREMENTAL "Support Incremental Font Loading" OFF)
+option(FT2_SUPPORT_OTVALID "Support OpenType Table Validation" OFF)
 option(FT2_SUPPORT_SMOOTH "Support Anti-Aliased & Sub-Pixel Rendering" ON)
 option(FT2_SUPPORT_STREAMS "Support Streamed Font Data" OFF)
 
@@ -79,7 +80,6 @@ cmake_dependent_option(FT2_SUPPORT_GXAAT "Support Apple GX/AAT Morphing" ON FT2_
 cmake_dependent_option(FT2_SUPPORT_GXVALID "Support GX/AAT Table Validation" OFF FT2_SUPPORT_GXAAT OFF)
 cmake_dependent_option(FT2_SUPPORT_GZIP "Support GZip (.gz) Compressed Streams" ON FT2_SUPPORT_STREAMS OFF)
 cmake_dependent_option(FT2_SUPPORT_LZW "Support LZW (.Z) Compressed Font Streams" ON FT2_SUPPORT_STREAMS OFF)
-cmake_dependent_option(FT2_SUPPORT_OTVALID "Support OpenType Table Validation" OFF FT2_DRIVER_OPENTYPE OFF)
 cmake_dependent_option(FT2_SUPPORT_PNG "Supports PNG Bitmap Font Data" OFF PNG_FOUND OFF)
 cmake_dependent_option(FT2_SUPPORT_T1MM "Support Type 1 Multiple Master Fonts" ON FT2_DRIVER_TYPE1 OFF)
 	
@@ -124,7 +124,7 @@ if(FT2_DRIVER_MACFNT)
 	set(FT_CONFIG_OPTION_MAC_FONTS ON)
 endif()
 
-if(FT2_DRIVER_OPENTYPE)
+if(FT2_DRIVER_CFF)
 	list(APPEND FREETYPE_SOURCE
 		"${PROJECT_SOURCE_DIR}/src/cff/cff.c")
 endif()
@@ -146,7 +146,6 @@ if(FT2_DRIVER_TRUETYPE)
 endif()
 
 if(FT2_DRIVER_TYPE1)
-	set(FT2_DRIVER_CID ON)
 	list(APPEND FREETYPE_SOURCE
 		"${PROJECT_SOURCE_DIR}/src/cid/type1cid.c"
 		"${PROJECT_SOURCE_DIR}/src/psaux/psaux.c"
@@ -159,24 +158,19 @@ if(FT2_DRIVER_WINFNT)
 		"${PROJECT_SOURCE_DIR}/src/winfonts/winfnt.c")
 endif()
 
-if(FT2_DRIVER_OPENTYPE OR FT2_DRIVER_TRUETYPE)
-	set(FT2_DRIVER_SFNT ON)
+if(FT2_DRIVER_CFF OR FT2_DRIVER_TRUETYPE)
 	list(APPEND FREETYPE_SOURCE
 		"${PROJECT_SOURCE_DIR}/src/sfnt/sfnt.c")
 endif()
 
-if(FT2_DRIVER_OPENTYPE OR FT2_DRIVER_TRUETYPE OR FT2_DRIVER_TYPE1)
+if(FT2_DRIVER_CFF OR FT2_DRIVER_TYPE1)
 	set(FT_CONFIG_OPTION_POSTSCRIPT_NAMES ON)
-	list(APPEND FREETYPE_SOURCE
-		"${PROJECT_SOURCE_DIR}/src/psnames/psnames.c")
-endif()
-
-if(FT2_DRIVER_OPENTYPE OR FT2_DRIVER_TYPE1)
 	set(FT_CONFIG_OPTION_ADOBE_GLYPH_LIST ON)
 	list(APPEND FREETYPE_SOURCE
 		"${PROJECT_SOURCE_DIR}/src/base/ftfstype.c"
 		"${PROJECT_SOURCE_DIR}/src/base/fttype1.c"
-		"${PROJECT_SOURCE_DIR}/src/pshinter/pshinter.c")
+		"${PROJECT_SOURCE_DIR}/src/pshinter/pshinter.c"
+		"${PROJECT_SOURCE_DIR}/src/psnames/psnames.c")
 endif()
 
 if(FT2_DRIVER_TRUETYPE AND FT2_DRIVER_TYPE1)
