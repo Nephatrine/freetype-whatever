@@ -58,6 +58,11 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
+#cmakedefine HAVE_UNISTD_H
+#cmakedefine HAVE_FCNTL_H
+#cmakedefine HAVE_STDINT_H
+
+
   /* There are systems (like the Texas Instruments 'C54x) where a `char' */
   /* has 16 bits.  ANSI C says that sizeof(char) is always 1.  Since an  */
   /* `int' has 16 bits also for this system, sizeof(int) gives 1 which   */
@@ -140,6 +145,14 @@ FT_BEGIN_HEADER
 #define FT_MACINTOSH 1
 #endif
 
+#endif
+
+
+  /* Fix compiler warning with sgi compiler */
+#if defined( __sgi ) && !defined( __GNUC__ )
+#if defined( _COMPILER_VERSION ) && ( _COMPILER_VERSION >= 730 )
+#pragma set woff 3505
+#endif
 #endif
 
 
