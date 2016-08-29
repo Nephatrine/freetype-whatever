@@ -48,17 +48,27 @@
 
 #ifdef FT_DEBUG_LEVEL_ERROR
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
   /* documentation is in ftdebug.h */
 
   FT_BASE_DEF( void )
   FT_Message( const char*  fmt,
               ... )
   {
-    va_list  ap;
-
+#ifdef _WIN32
+	static char buf[8192];
+#endif
+	va_list  ap;
 
     va_start( ap, fmt );
     vfprintf( stderr, fmt, ap );
+#ifdef _WIN32
+	vsprintf( buf, fmt, ap );
+	OutputDebugStringA( buf );
+#endif
     va_end( ap );
   }
 
@@ -69,11 +79,17 @@
   FT_Panic( const char*  fmt,
             ... )
   {
+#ifdef _WIN32
+	static char buf[8192];
+#endif
     va_list  ap;
-
 
     va_start( ap, fmt );
     vfprintf( stderr, fmt, ap );
+#ifdef _WIN32
+	vsprintf( buf, fmt, ap );
+	OutputDebugStringA( buf );
+#endif
     va_end( ap );
 
     exit( EXIT_FAILURE );
