@@ -15,11 +15,6 @@ include(WhatEver)
 we_mark_license(FTL.TXT)
 we_mark_docs(README.md)
 
-set(WHATEVER_PKG_CONTACT "nephatrine@gmail.com")
-set(WHATEVER_PKG_DESCRIPTION "Font Engine")
-set(WHATEVER_PKG_LICENSE "FTL.TXT")
-set(WHATEVER_PKG_VENDOR "Nephatrine")
-
 #
 # Build Options
 #
