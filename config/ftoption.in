@@ -122,7 +122,7 @@ FT_BEGIN_HEADER
   /* This is done to allow FreeType clients to run unmodified, forcing     */
   /* them to display normal gray-level anti-aliased glyphs.                */
   /*                                                                       */
-#cmakedefine FT_CONFIG_OPTION_SUBPIXEL_RENDERING
+#define FT_CONFIG_OPTION_SUBPIXEL_RENDERING
 
 
   /*************************************************************************/
@@ -335,7 +335,7 @@ FT_BEGIN_HEADER
   /*   You would normally undefine this configuration macro when building  */
   /*   a version of FreeType that doesn't contain a Type 1 or CFF driver.  */
   /*                                                                       */
-#cmakedefine FT_CONFIG_OPTION_POSTSCRIPT_NAMES
+#define FT_CONFIG_OPTION_POSTSCRIPT_NAMES
 
 
   /*************************************************************************/
@@ -353,7 +353,7 @@ FT_BEGIN_HEADER
   /*   able to synthesize a Unicode charmap out of the glyphs found in the */
   /*   fonts.                                                              */
   /*                                                                       */
-#cmakedefine FT_CONFIG_OPTION_ADOBE_GLYPH_LIST
+#define FT_CONFIG_OPTION_ADOBE_GLYPH_LIST
 
 
   /*************************************************************************/
@@ -699,7 +699,7 @@ FT_BEGIN_HEADER
   /* Define TT_CONFIG_OPTION_BDF if you want to include support for        */
   /* an embedded `BDF ' table within SFNT-based bitmap formats.            */
   /*                                                                       */
-#cmakedefine TT_CONFIG_OPTION_BDF
+#define TT_CONFIG_OPTION_BDF
 
 
   /*************************************************************************/
@@ -772,7 +772,7 @@ FT_BEGIN_HEADER
   /* compilation of the Multiple Masters font support in the Type 1        */
   /* driver.                                                               */
   /*                                                                       */
-#cmakedefine T1_CONFIG_OPTION_NO_MM_SUPPORT
+#undef T1_CONFIG_OPTION_NO_MM_SUPPORT
 
 
   /*************************************************************************/
