@@ -1,31 +1,16 @@
-cmake_minimum_required(VERSION 3.3)
-cmake_policy(SET CMP0022 NEW)
-cmake_policy(SET CMP0048 NEW)
-cmake_policy(SET CMP0054 NEW)
-cmake_policy(SET CMP0063 NEW)
+cmake_minimum_required(VERSION 3.3.2)
 
-project(freetype2
+project(freetype2_we
 	VERSION 2.6.5)
 
-list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/config/CMake")
+set(FREETYPE_SOVERSION ${PROJECT_VERSION_MINOR})
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/config/CMake")
 set(WHATEVER_SET_LANGUAGE C)
 include(WhatEver)
 
 we_mark_license(FTL.TXT)
 we_mark_docs(README.md)
-
-#
-# Build Options
-#
-
-cmake_dependent_option(BUILD_TESTS "Build Tests" ON "NOT CMAKE_TOOLCHAIN_FILE" OFF)
-
-#
-# Project Options
-#
-
-add_definitions(-DFT2_BUILD_LIBRARY)
 
 #
 # Project Source Code
@@ -75,35 +60,34 @@ find_package(ZLIB)
 #
 
 option(FT_CONFIG_OPTION_DISABLE_STREAM_SUPPORT "Do Not Support Stream Functions & Types" OFF)
-option(FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES "Support FREETYPE_PROPERTIES Environment Variable" ON)
-option(FT_CONFIG_OPTION_INCREMENTAL "Support FT_Incremental_Interface" ON)
-option(FT_CONFIG_OPTION_MAC_FONTS "Support Macintosh Outline Formats" ON)
-option(FT_CONFIG_OPTION_USE_ZLIB "Support ZLib (.gz) Compression" ON)
+option(FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES "Support FREETYPE_PROPERTIES Environment Variable" OFF)
+option(FT_CONFIG_OPTION_INCREMENTAL "Support FT_Incremental_Interface" OFF)
+option(FT_CONFIG_OPTION_MAC_FONTS "Support Macintosh Outline Formats" OFF)
 
 cmake_dependent_option(FT_CONFIG_OPTION_SYSTEM_ZLIB "Use System ZLib Library" ON ZLIB_FOUND OFF)
-cmake_dependent_option(FT_CONFIG_OPTION_USE_PNG "Support PNG Bitmap Font Data" ON PNG_FOUND OFF)
+cmake_dependent_option(FT_CONFIG_OPTION_USE_PNG "Support PNG Bitmap Font Data" OFF PNG_FOUND OFF)
 
-option(FT_DRIVER_BDF "Support Adobe Glyph Bitmap Fonts" ON)
+option(FT_DRIVER_BDF "Support Adobe Glyph Bitmap Fonts" OFF)
 if(FT_DRIVER_BDF)
 	list(APPEND FREETYPE_SOURCE
 		"${CMAKE_CURRENT_SOURCE_DIR}/src/base/ftbdf.c"
 		"${CMAKE_CURRENT_SOURCE_DIR}/src/bdf/bdf.c")
 endif()
 
-option(FT_DRIVER_PCF "Support CyberTex PCF Bitmap Fonts" ON)
+option(FT_DRIVER_PCF "Support CyberTex PCF Bitmap Fonts" OFF)
 if(FT_DRIVER_PCF)
 	list(APPEND FREETYPE_SOURCE
 		"${CMAKE_CURRENT_SOURCE_DIR}/src/pcf/pcf.c")
 endif()
 
-option(FT_DRIVER_TRUEDOC "Support BitStream TrueDoc Fonts (.PFR)" ON)
+option(FT_DRIVER_TRUEDOC "Support BitStream TrueDoc Fonts (.PFR)" OFF)
 if(FT_DRIVER_TRUEDOC)
 	list(APPEND FREETYPE_SOURCE
 		"${CMAKE_CURRENT_SOURCE_DIR}/src/base/ftpfr.c"
 		"${CMAKE_CURRENT_SOURCE_DIR}/src/pfr/pfr.c")
 endif()
 
-option(FT_DRIVER_TYPE1 "Support PostScript Type 1 Fonts" ON)
+option(FT_DRIVER_TYPE1 "Support PostScript Type 1 Fonts" OFF)
 if(FT_DRIVER_TYPE1)
 	list(APPEND FREETYPE_SOURCE
 		"${CMAKE_CURRENT_SOURCE_DIR}/src/base/ftmm.c"
@@ -113,26 +97,26 @@ if(FT_DRIVER_TYPE1)
 		"${CMAKE_CURRENT_SOURCE_DIR}/src/type42/type42.c")
 endif()
 
-option(FT_DRIVER_WINFNT "Support Windows Bitmap Fonts (.FON, .FNT)" ON)
+option(FT_DRIVER_WINFNT "Support Windows Bitmap Fonts (.FON, .FNT)" OFF)
 if(FT_DRIVER_WINFNT)
 	list(APPEND FREETYPE_SOURCE
 		"${CMAKE_CURRENT_SOURCE_DIR}/src/base/ftwinfnt.c"
 		"${CMAKE_CURRENT_SOURCE_DIR}/src/winfonts/winfnt.c")
 endif()
 
-cmake_dependent_option(FT_CONFIG_OPTION_USE_BZIP2 "Support BZip2 (.bz2) Compression" ON BZIP2_FOUND OFF)
+cmake_dependent_option(FT_CONFIG_OPTION_USE_BZIP2 "Support BZip2 (.bz2) Compression" OFF BZIP2_FOUND OFF)
 if(FT_CONFIG_OPTION_USE_BZIP2)
 	list(APPEND FREETYPE_SOURCE
 		"${CMAKE_CURRENT_SOURCE_DIR}/src/bzip2/ftbzip2.c")
 endif()
 
-option(FT_CONFIG_OPTION_USE_LZW "Support LZW (.Z) Compression" ON)
+option(FT_CONFIG_OPTION_USE_LZW "Support LZW (.Z) Compression" OFF)
 if(FT_CONFIG_OPTION_USE_LZW)
 	list(APPEND FREETYPE_SOURCE
 		"${CMAKE_CURRENT_SOURCE_DIR}/src/lzw/ftlzw.c")
 endif()
 
-option(FT_CONFIG_OPTION_USE_ZLIB "Support ZLib (.gz) Compression" ON)
+option(FT_CONFIG_OPTION_USE_ZLIB "Support ZLib (.gz) Compression" OFF)
 if(FT_CONFIG_OPTION_USE_ZLIB)
 	list(APPEND FREETYPE_SOURCE
 		"${CMAKE_CURRENT_SOURCE_DIR}/src/gzip/ftgzip.c")
@@ -164,7 +148,7 @@ we_check_include("unistd.h")
 # Generate Configuration Headers
 #
 
-if(WHATEVER_DEBUG)                                                                        
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 	set(FT_DEBUG_LEVEL_ERROR ON)
 	set(FT_DEBUG_LEVEL_TRACE ON)
 	set(FT_DEBUG_AUTOFIT ON)
@@ -181,19 +165,21 @@ list(APPEND FREETYPE_HEADERS ${WHATEVER_GENERATED})
 
 option(BUILD_LIBRARY_STATIC "Build Static Library" ON)
 if(BUILD_LIBRARY_STATIC)
-	we_build_library_static(FREETYPE_STATIC ${PROJECT_NAME} ${PROJECT_VERSION_MINOR} "${FREETYPE_SOURCE};${FREETYPE_HEADERS}")
+	we_build_library_static(FREETYPE_STATIC ${PROJECT_NAME} ${FREETYPE_SOVERSION} "${FREETYPE_SOURCE};${FREETYPE_HEADERS}")
 endif()
 
 option(BUILD_LIBRARY_SHARED "Build Shared Library" ON)
 if(BUILD_LIBRARY_STATIC)
-	we_build_library_shared(FREETYPE_SHARED ${PROJECT_NAME} ${PROJECT_VERSION_MINOR} "${FREETYPE_SOURCE};${FREETYPE_HEADERS}")
+	we_build_library_shared(FREETYPE_SHARED ${PROJECT_NAME} ${FREETYPE_SOVERSION} "${FREETYPE_SOURCE};${FREETYPE_HEADERS}")
 endif()
 
-we_include_public("${WHATEVER_TARGETS_LIBRARY}" include ${PROJECT_NAME})
+we_include_public("${WHATEVER_TARGETS_LIBRARY}" include "${PROJECT_NAME}-${FREETYPE_SOVERSION}")
 
 #
 # Link External Libraries
 #
+
+list(APPEND FREETYPE_EXT_DEF FT2_BUILD_LIBRARY)
 
 if(FT_CONFIG_OPTION_USE_BZIP2)
 	list(APPEND FREETYPE_EXT_LIB ${BZIP2_LIBRARIES})
