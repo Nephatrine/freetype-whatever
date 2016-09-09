@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.3.2)
 
 project(freetype2_we
-	VERSION 2.6.5)
+	VERSION 2.7.0)
 
 set(FREETYPE_SOVERSION ${PROJECT_VERSION_MINOR})
 
