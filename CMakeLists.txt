@@ -10,7 +10,7 @@ set(WHATEVER_SET_LANGUAGE C)
 include(WhatEver)
 
 we_mark_license(FTL.TXT)
-we_mark_docs(README.md)
+we_mark_docs(README.md ChangeLog)
 
 #
 # Project Source Code
@@ -207,4 +207,5 @@ we_external_library("${WHATEVER_TARGETS_STATIC}" PUBLIC "${FREETYPE_EXT_LIB}")
 #
 
 we_package(freetype Nephatrine nephatrine@gmail.com "Open Source Font Engine")
+we_generate_exports("${WHATEVER_TARGETS_LIBRARY}")
 
